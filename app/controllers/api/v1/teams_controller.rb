@@ -6,12 +6,12 @@ class Api::V1::TeamsController < ApplicationController
   end 
 
   def create
-    team = Team.create(
-      name: params[:name],
-      rank: params[:rank],
-      user_id: params[:user_id]
-    )
-    render json: team
+    team = Team.new(team_params) # Use strong parameters
+    if team.save
+      render json: team, status: :created # 201 for success
+    else
+      render json: { errors: team.errors.full_messages }, status: :unprocessable_entity # 422 for failure
+    end
   end
 
   def update
@@ -38,4 +38,3 @@ class Api::V1::TeamsController < ApplicationController
   end
   
 end
-
